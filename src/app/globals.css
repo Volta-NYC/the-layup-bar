@@ -1,12 +1,909 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   @import must precede all other rules
+───────────────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,700&family=DM+Sans:wght@300;400;500&display=swap');
+ 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-html, body {
-  padding: 0;
-  margin: 0;
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   ─
+   The LayUp — Brooklyn sports bar one block from Barclays Center.
+   The vibe: game night under stadium lights, warm brick walls, cold beer,
+   the orange of a basketball, the green felt of a pool table, the glow
+   of a dozen TVs showing the game. Bold. Loud. Brooklyn.
+   
+   Color logic:
+   — The walls: exposed Brooklyn brick, warm terracotta-red
+   — The light: sodium vapor overhead, amber spill on surfaces
+   — The accent: basketball orange — alive, urgent, motion
+   — The dark: not black, but the inside of a dive bar at 10pm — navy-black
+   — Green: court green, subtle, secondary signal
+   — Everything has texture. Nothing is flat.
+═════════════════════════════════════════════════════════════════════════ */
+:root {
+ 
+  /* ── Backgrounds ──────────────────────────────────────────────────────
+     Deep, warm dark — like a sports bar at night, TVs glowing
+  ────────────────────────────────────────────────────────────────────── */
+  --bg-pit:       #06080d;   /* absolute black-navy, under the bar */
+  --bg-base:      #0c0f16;   /* page bg — the room when the lights are low */
+  --bg-surface:   #141922;   /* cards — dark wall, unlit corner */
+  --bg-raised:    #1c2230;   /* elevated — the bar top */
+  --bg-highlight: #22293c;   /* hover — caught by the TV glow */
+  --bg-overlay:   rgba(8, 10, 18, 0.92);
+ 
+  /* ── Brick / Terracotta — the walls, Brooklyn character ──────────────
+     Warm red-orange brick. The bar is in a converted Brooklyn rowhouse.
+  ────────────────────────────────────────────────────────────────────── */
+  --brick-faint:  rgba(185, 62, 18, 0.07);
+  --brick-dim:    rgba(190, 66, 20, 0.15);
+  --brick-soft:   rgba(198, 72, 22, 0.28);
+  --brick-mid:    rgba(208, 80, 26, 0.52);
+  --brick-strong: rgba(220, 90, 30, 0.80);
+  --brick-full:   #c04818;   /* pure brick */
+  --brick-deep:   #8a2c08;   /* mortar shadow */
+ 
+  /* ── Orange / Court — the basketball, the energy, THE accent ─────────
+     This is the hero color. Brooklyn Nets play 1 block away. The ball
+     is orange. The crowd is loud. This color carries the urgency.
+  ────────────────────────────────────────────────────────────────────── */
+  --orange-faint:  rgba(230, 100, 20, 0.07);
+  --orange-dim:    rgba(235, 108, 22, 0.16);
+  --orange-soft:   rgba(242, 118, 26, 0.30);
+  --orange-mid:    rgba(248, 130, 32, 0.58);
+  --orange-strong: rgba(255, 145, 40, 0.88);
+  --orange-full:   #e8640e;   /* the ball, the fire, the call-to-action */
+  --orange-hot:    #f5780a;   /* peak energy — hover states */
+  --orange-burn:   #ff8c1a;   /* neon version — score graphics, highlights */
+ 
+  /* ── Amber / Gold — the beer, the trophy, the win ────────────────────
+     Deeper than orange. The foam settling on a cold draft. Victory gold.
+  ────────────────────────────────────────────────────────────────────── */
+  --amber-faint:  rgba(198, 138, 18, 0.07);
+  --amber-dim:    rgba(205, 148, 22, 0.15);
+  --amber-soft:   rgba(215, 160, 28, 0.28);
+  --amber-mid:    rgba(225, 172, 38, 0.55);
+  --amber-strong: rgba(240, 188, 55, 0.84);
+  --amber-full:   #d4980e;   /* cold draft in a pint glass backlit */
+  --amber-bright: #e8b020;   /* trophy gold, win state */
+ 
+  /* ── Court Green — secondary accent, pool table, Nets away ───────────
+     Muted, earthy. Used sparingly as a secondary signal.
+  ────────────────────────────────────────────────────────────────────── */
+  --green-faint:  rgba(38, 90, 48, 0.08);
+  --green-dim:    rgba(42, 100, 52, 0.16);
+  --green-soft:   rgba(48, 112, 58, 0.28);
+  --green-mid:    rgba(55, 128, 68, 0.52);
+  --green-full:   #2a6838;   /* court felt, away jersey */
+ 
+  /* ── Steel Blue — TV screen glow, scoreboard, glass ─────────────────
+     The cool counterpoint. Every bar has TVs. This is the screen light.
+  ────────────────────────────────────────────────────────────────────── */
+  --steel-faint:  rgba(40, 80, 140, 0.06);
+  --steel-dim:    rgba(45, 88, 155, 0.14);
+  --steel-soft:   rgba(50, 98, 170, 0.25);
+  --steel-mid:    rgba(58, 110, 190, 0.48);
+  --steel-full:   #2a5a9e;   /* TV glow blue */
+ 
+  /* ── Cream / Warm White — the only near-light tone ───────────────────
+     Warm as stadium floodlights. Never cool, never pure white.
+  ────────────────────────────────────────────────────────────────────── */
+  --cream-deep:   #c0a878;   /* aged oak in amber light */
+  --cream-mid:    #dcc490;   /* menu text, warm midtone */
+  --cream-warm:   #eed8a8;   /* bright surface, heading glow */
+  --cream-pure:   #f8eecc;   /* the brightest highlight */
+ 
+  /* ── Text ─────────────────────────────────────────────────────────────
+     Nothing fully white. Warm, readable, bar-lit.
+  ────────────────────────────────────────────────────────────────────── */
+  --text-primary:   #f0e0b8;   /* warm parchment — main text */
+  --text-secondary: rgba(225, 188, 115, 0.82);
+  --text-muted:     rgba(172, 135, 75, 0.62);
+  --text-ghost:     rgba(120, 88, 45, 0.40);
+  --text-orange:    #e8680e;   /* orange text — prices, CTAs, fire moments */
+  --text-amber:     #cc9010;   /* amber text — subheadings, menu items */
+ 
+  /* ── Borders ──────────────────────────────────────────────────────────*/
+  --border-hair:    rgba(180, 70, 22, 0.10);
+  --border-subtle:  rgba(188, 78, 26, 0.18);
+  --border-soft:    rgba(200, 90, 30, 0.30);
+  --border-mid:     rgba(215, 105, 38, 0.48);
+  --border-orange:  rgba(235, 120, 40, 0.35);
+  --border-amber:   rgba(210, 155, 32, 0.28);
+  --border-steel:   rgba(55, 110, 185, 0.22);
+ 
+  /* ── Glows ────────────────────────────────────────────────────────────
+     The light sources in the bar:
+     — Warm tungsten over the bar counter (orange-amber)
+     — Brick walls catching the overhead light (warm red)
+     — TV screen spill (cool blue-white, used rarely)
+     — The neon signs (orange, "OPEN", "SPORTS BAR", "BEER")
+  ────────────────────────────────────────────────────────────────────── */
+  --glow-brick:
+    0 0  6px rgba(210, 72, 22, 0.55),
+    0 0 22px rgba(180, 48, 14, 0.30),
+    0 0 55px rgba(155, 30, 8,  0.14);
+ 
+  --glow-orange:
+    0 0  6px rgba(245, 128, 30, 0.65),
+    0 0 22px rgba(220, 100, 20, 0.32),
+    0 0 55px rgba(185, 75, 10, 0.16);
+ 
+  --glow-amber:
+    0 0  6px rgba(238, 178, 50, 0.52),
+    0 0 22px rgba(210, 148, 28, 0.26),
+    0 0 55px rgba(175, 110, 10, 0.12);
+ 
+  --glow-steel:
+    0 0  6px rgba(60, 120, 200, 0.45),
+    0 0 22px rgba(45, 90, 165, 0.22),
+    0 0 55px rgba(30, 65, 130, 0.10);
+ 
+  /* Large atmospheric blooms */
+  --glow-brick-xl:
+    0 0 100px rgba(195, 58, 18, 0.30),
+    0 0 220px rgba(160, 35, 8,  0.15);
+ 
+  --glow-orange-xl:
+    0 0 100px rgba(235, 115, 28, 0.32),
+    0 0 220px rgba(200, 85, 15, 0.16);
+ 
+  /* ── Neon / Sign effects ──────────────────────────────────────────────
+     "LAYUP" in orange. Cold draft signs. Exit signs.
+     The double-halo characteristic of real neon glass tubes.
+  ────────────────────────────────────────────────────────────────────── */
+  --neon-orange:
+    0 0  3px rgba(255, 255, 255, 0.85),
+    0 0 10px rgba(255, 140, 40, 0.98),
+    0 0 22px rgba(230, 105, 18, 0.78),
+    0 0 55px rgba(195, 75, 8,  0.42),
+    0 0 100px rgba(165, 55, 5, 0.20);
+ 
+  --neon-amber:
+    0 0  3px rgba(255, 255, 255, 0.78),
+    0 0 10px rgba(248, 195, 60, 0.95),
+    0 0 22px rgba(218, 158, 30, 0.72),
+    0 0 55px rgba(180, 118, 10, 0.38);
+ 
+  --neon-red:
+    0 0  3px rgba(255, 255, 255, 0.80),
+    0 0 10px rgba(255, 80,  50, 0.95),
+    0 0 22px rgba(220, 40,  20, 0.75),
+    0 0 55px rgba(185, 20,  10, 0.40);
+ 
+  /* ── Typography ───────────────────────────────────────────────────────
+     Bebas Neue: the scoreboard, the sports graphic, THE LAYUP wordmark.
+     Barlow Condensed: editorial sports headlines, nav, menus.
+     DM Sans: body copy, descriptions, practical text.
+  ────────────────────────────────────────────────────────────────────── */
+  --font-display:  'Bebas Neue', 'Anton', 'Impact', sans-serif;
+  --font-heading:  'Barlow Condensed', 'Oswald', system-ui, sans-serif;
+  --font-body:     'DM Sans', system-ui, sans-serif;
+ 
+  /* ── Layout ───────────────────────────────────────────────────────────*/
+  --section-gap:   clamp(4rem, 8vw, 8rem);
+  --content-width: 1200px;
+ 
+  /* ── Motion ───────────────────────────────────────────────────────────*/
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-slam:     cubic-bezier(0.22, 0, 0.0, 1);   /* fast in, hold — like a dunk */
+  --ease-warm:     cubic-bezier(0.22, 0.8, 0.36, 1);
+ 
+  --t-instant: 80ms;
+  --t-fast:    150ms;
+  --t-mid:     280ms;
+  --t-slow:    480ms;
+  --t-crawl:   800ms;
 }
-
-* {
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   RESET & BASE
+═════════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+ 
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+ 
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.72;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   LAYERED ATMOSPHERE
+   ─
+   Recreating the visual environment of a Brooklyn sports bar at night:
+   — A warm orange-amber bloom at top center (the overhead bar lights)
+   — Deep brick-red from the left wall (exposed Brooklyn brick)
+   — A low steel-blue wash at the bottom (TV screen spill from the floor)
+   — A subtle warm amber from the right (back bar, bottles, shelves)
+   — Film grain for analog texture — bars are never perfectly lit
+═════════════════════════════════════════════════════════════════════════ */
+ 
+/* Layer 1 — the room's light sources */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    /* Top center — the main bar overhead lights, sodium vapor warm */
+    radial-gradient(
+      ellipse 70% 45% at 50% -10%,
+      rgba(210, 95, 20, 0.20) 0%,
+      rgba(185, 72, 12, 0.08) 45%,
+      transparent 68%
+    ),
+    /* Left — exposed brick wall catching the light */
+    radial-gradient(
+      ellipse 50% 75% at -5% 45%,
+      rgba(175, 45, 12, 0.22) 0%,
+      rgba(150, 30, 8,  0.09) 38%,
+      transparent 62%
+    ),
+    /* Center high — the main game screen glow from above */
+    radial-gradient(
+      ellipse 55% 40% at 52% 15%,
+      rgba(48, 88, 165, 0.12) 0%,
+      rgba(35, 65, 130, 0.04) 45%,
+      transparent 68%
+    ),
+    /* Right — back bar bottles, shelves backlit */
+    radial-gradient(
+      ellipse 50% 65% at 110% 50%,
+      rgba(195, 120, 18, 0.18) 0%,
+      rgba(168, 92, 10, 0.07) 42%,
+      transparent 65%
+    ),
+    /* Floor base — warm smoldering glow, everything sits on this */
+    radial-gradient(
+      ellipse 100% 30% at 50% 112%,
+      rgba(155, 42, 8, 0.18) 0%,
+      rgba(130, 25, 5, 0.07) 52%,
+      transparent 74%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+ 
+/* Layer 2 — analog film grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.68' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  opacity: 0.038;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: overlay;
+}
+ 
+/* All content above the atmosphere */
+#__next, main, header, footer, section, nav, aside {
+  position: relative;
+  z-index: 1;
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY
+   ─
+   Bebas Neue: impact display — the scoreboard, the big moments
+   Barlow Condensed: sports editorial — headers, nav, section titles
+   DM Sans: clean body — readable in dim bar lighting
+═════════════════════════════════════════════════════════════════════════ */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  color: var(--text-primary);
+  line-height: 0.95;
+  letter-spacing: 0.04em;
+  font-weight: 400;  /* Bebas is inherently bold */
+  text-transform: uppercase;
+}
+ 
+h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+ 
+h1 {
+  font-size: clamp(4rem, 10vw, 9rem);
+  letter-spacing: 0.06em;
+  line-height: 0.9;
+}
+h2 { font-size: clamp(2.8rem, 6vw, 5.5rem); }
+h3 { font-size: clamp(2rem, 3.8vw, 3.5rem); }
+h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
+h5 { font-size: 1.15rem; }
+h6 { font-size: 0.95rem; }
+ 
+p {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  font-weight: 300;
+  max-width: 68ch;
+}
+ 
+/* Scoreboard eyebrow — the section label above big headings */
+.eyebrow {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--text-orange);
+}
+ 
+/* Italic accents — Barlow Condensed italic */
+em, .italic-accent {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--text-amber);
+  letter-spacing: 0.04em;
+}
+ 
+strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+ 
+/* Drop cap for editorial openers */
+.drop-cap::first-letter {
+  font-family: var(--font-display);
+  font-size: 5em;
+  line-height: 0.78;
+  float: left;
+  margin: 0.06em 0.10em 0 0;
+  color: var(--orange-full);
+  text-shadow: var(--glow-orange);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   NAVBAR — The LayUp's primary navigation
+   ─
+   Dark, semi-transparent, blurs the atmosphere behind it.
+   The logo sits center or left. Nav links in Barlow Condensed.
+   An orange underline active state — like a court line.
+   On scroll: border bottom appears like a line on the court.
+═════════════════════════════════════════════════════════════════════════ */
+.navbar,
+header,
+.site-header,
+#header {
+  background: rgba(8, 10, 18, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(150%) !important;
+  border-bottom: 1px solid rgba(210, 85, 22, 0.12) !important;
+  transition:
+    background    var(--t-mid) var(--ease-in-out),
+    border-color  var(--t-mid) var(--ease-in-out),
+    box-shadow    var(--t-mid) var(--ease-in-out);
+}
+ 
+/* Scrolled state — tighter, more defined */
+.navbar.scrolled,
+header.scrolled,
+#header.scrolled {
+  background: rgba(6, 8, 14, 0.96) !important;
+  border-bottom-color: rgba(220, 90, 28, 0.22) !important;
+  box-shadow:
+    0 1px 0 rgba(225, 100, 25, 0.08),
+    0 4px 32px rgba(6, 8, 14, 0.60);
+}
+ 
+/* Site title / logo */
+.header-title a,
+.site-title a,
+#site-title {
+  font-family: var(--font-display) !important;
+  font-size: clamp(1.2rem, 2.5vw, 1.8rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.10em !important;
+  text-transform: uppercase !important;
+  color: var(--cream-warm) !important;
+  text-decoration: none !important;
+  transition:
+    color      var(--t-mid) var(--ease-in-out),
+    text-shadow var(--t-mid) var(--ease-in-out);
+}
+ 
+.header-title a:hover,
+#site-title:hover {
+  color: var(--orange-burn) !important;
+  text-shadow:
+    0 0 20px rgba(235, 120, 30, 0.55),
+    0 0 50px rgba(200, 85, 15, 0.25);
+}
+ 
+/* Nav links */
+.header-nav-item a,
+.header-nav a,
+nav a {
+  font-family: var(--font-heading) !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: rgba(225, 188, 115, 0.75) !important;
+  text-decoration: none !important;
+  position: relative;
+  padding-bottom: 3px;
+  transition:
+    color       var(--t-fast) var(--ease-in-out),
+    text-shadow var(--t-mid)  var(--ease-in-out);
+}
+ 
+/* The court-line underline on hover */
+.header-nav-item a::after,
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--orange-full);
+  box-shadow: 0 0 8px rgba(235, 100, 15, 0.70);
+  transition: width var(--t-mid) var(--ease-out-expo);
+}
+ 
+.header-nav-item a:hover,
+nav a:hover {
+  color: var(--cream-warm) !important;
+  text-shadow: 0 0 12px rgba(225, 120, 35, 0.40);
+}
+ 
+.header-nav-item a:hover::after,
+nav a:hover::after {
+  width: 100%;
+}
+ 
+/* Active / current page */
+.header-nav-item--active a,
+.header-nav-item a.active {
+  color: var(--orange-burn) !important;
+}
+ 
+.header-nav-item--active a::after,
+.header-nav-item a.active::after {
+  width: 100%;
+}
+ 
+/* Mobile menu overlay */
+.header-menu,
+.header-menu-bg {
+  background: rgba(6, 8, 14, 0.98) !important;
+}
+ 
+.header-menu-nav-item a {
+  font-family: var(--font-display) !important;
+  font-size: clamp(2rem, 8vw, 4rem) !important;
+  letter-spacing: 0.08em !important;
+  color: var(--cream-warm) !important;
+  text-transform: uppercase !important;
+  transition: color var(--t-fast) var(--ease-in-out) !important;
+}
+ 
+.header-menu-nav-item a:hover {
+  color: var(--orange-burn) !important;
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   LINKS
+═════════════════════════════════════════════════════════════════════════ */
+a {
+  color: var(--amber-strong);
+  text-decoration: none;
+  transition:
+    color       var(--t-mid) var(--ease-in-out),
+    text-shadow var(--t-mid) var(--ease-in-out);
+}
+ 
+a:hover {
+  color: var(--cream-warm);
+  text-shadow:
+    0 0 10px rgba(228, 118, 28, 0.65),
+    0 0 25px rgba(195, 82, 16, 0.30);
+}
+ 
+a:focus-visible {
+  outline: 1.5px solid var(--orange-mid);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   TEXT SELECTION
+═════════════════════════════════════════════════════════════════════════ */
+::selection {
+  background: rgba(220, 88, 18, 0.42);
+  color: var(--cream-pure);
+}
+::-moz-selection {
+  background: rgba(220, 88, 18, 0.42);
+  color: var(--cream-pure);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   SCROLLBAR — thin orange rail
+═════════════════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: var(--bg-pit); }
+::-webkit-scrollbar-thumb  {
+  background: rgba(210, 85, 20, 0.42);
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(240, 108, 28, 0.65);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   LAYOUT
+═════════════════════════════════════════════════════════════════════════ */
+.container {
+  width: 100%;
+  max-width: var(--content-width);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+}
+ 
+.section {
+  padding-block: var(--section-gap);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   SURFACE COMPONENTS
+   ─
+   Cards feel like surfaces in the bar — dark steel, dimly lit,
+   warm brick light catching the edges. Menus and info cards.
+═════════════════════════════════════════════════════════════════════════ */
+.card {
+  background: linear-gradient(
+    155deg,
+    rgba(22, 28, 42, 0.85) 0%,
+    rgba(14, 18, 28, 0.78) 100%
+  );
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  transition:
+    border-color var(--t-mid) var(--ease-warm),
+    box-shadow   var(--t-mid) var(--ease-warm),
+    background   var(--t-mid) var(--ease-warm);
+}
+ 
+.card:hover {
+  background: linear-gradient(
+    155deg,
+    rgba(30, 38, 58, 0.92) 0%,
+    rgba(20, 26, 40, 0.85) 100%
+  );
+  border-color: var(--border-soft);
+  box-shadow: var(--glow-orange);
+}
+ 
+/* Orange variant — lit, action state */
+.card-orange {
+  border-color: var(--border-orange);
+}
+ 
+.card-orange:hover {
+  border-color: rgba(240, 125, 38, 0.50);
+  box-shadow: var(--glow-orange);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   BUTTONS
+═════════════════════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-radius: 3px;
+  padding: 0.85rem 2.2rem;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform    var(--t-fast) var(--ease-spring),
+    box-shadow   var(--t-mid)  var(--ease-warm),
+    background   var(--t-mid)  var(--ease-in-out),
+    border-color var(--t-mid)  var(--ease-in-out),
+    color        var(--t-mid)  var(--ease-in-out);
+}
+ 
+/* Shimmer — light raking across the surface */
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 200, 120, 0.12) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform var(--t-slow) var(--ease-out-expo);
+}
+ 
+.btn:hover::before {
+  transform: translateX(100%);
+}
+ 
+/* Primary — the orange, the game, the CTA */
+.btn-primary {
+  background: linear-gradient(
+    145deg,
+    #a83c08 0%,
+    #d45510 45%,
+    #bc4a0c 100%
+  );
+  color: var(--cream-warm);
+  box-shadow:
+    0 1px 0 rgba(255, 170, 80, 0.12) inset,
+    0 4px 24px rgba(185, 72, 12, 0.48);
+}
+ 
+.btn-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(
+    145deg,
+    #c04812 0%,
+    #e86018 45%,
+    #d05410 100%
+  );
+  box-shadow:
+    0 1px 0 rgba(255, 170, 80, 0.15) inset,
+    0 8px 40px rgba(220, 90, 18, 0.68),
+    0 0 80px rgba(185, 65, 8,  0.24);
+  color: var(--cream-pure);
+}
+ 
+.btn-primary:active {
+  transform: translateY(0) scale(1.0);
+  box-shadow: 0 2px 14px rgba(185, 72, 12, 0.40);
+}
+ 
+/* Secondary — orange outline, the roster card style */
+.btn-secondary {
+  background: transparent;
+  color: var(--orange-strong);
+  border: 1px solid var(--border-orange);
+}
+ 
+.btn-secondary:hover {
+  background: rgba(230, 100, 20, 0.10);
+  border-color: var(--orange-mid);
+  color: var(--cream-warm);
+  box-shadow: var(--glow-orange);
+}
+ 
+/* Ghost — barely-there, tertiary action */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border-hair);
+}
+ 
+.btn-ghost:hover {
+  background: var(--brick-faint);
+  border-color: var(--border-soft);
+  color: var(--text-secondary);
+  box-shadow: var(--glow-brick);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   DIVIDERS
+═════════════════════════════════════════════════════════════════════════ */
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border-subtle) 20%,
+    var(--border-subtle) 80%,
+    transparent
+  );
+  border: none;
+}
+ 
+/* Court line divider — like the half-court line */
+.divider-court {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  height: auto;
+  background: none;
+}
+ 
+.divider-court::before,
+.divider-court::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-orange) 60%);
+}
+ 
+.divider-court::after {
+  background: linear-gradient(90deg, var(--border-orange) 40%, transparent);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   GLOW BLOBS — atmospheric light pools
+═════════════════════════════════════════════════════════════════════════ */
+.glow-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(80px);
+}
+ 
+.glow-blob-brick   { background: rgba(185, 48, 12, 0.22);  }
+.glow-blob-orange  { background: rgba(220, 95, 18, 0.24);  }
+.glow-blob-amber   { background: rgba(198, 142, 18, 0.18); }
+.glow-blob-steel   { background: rgba(42, 85, 160, 0.16);  }
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   NEON / SIGN EFFECTS
+   "THE LAYUP" in orange neon. One per page.
+═════════════════════════════════════════════════════════════════════════ */
+.neon-orange {
+  color: #ff8820;
+  text-shadow: var(--neon-orange);
+}
+ 
+.neon-amber {
+  color: #f0c030;
+  text-shadow: var(--neon-amber);
+}
+ 
+.neon-red {
+  color: #ff5535;
+  text-shadow: var(--neon-red);
+}
+ 
+@keyframes neon-flicker {
+  0%, 88%, 91%, 93.5%, 100% { opacity: 1; }
+  89%    { opacity: 0.30; }
+  90%    { opacity: 0.70; }
+  92%    { opacity: 0.45; }
+  93%    { opacity: 0.90; }
+  94%    { opacity: 1;    }
+}
+ 
+.neon-flicker {
+  animation: neon-flicker 8s infinite var(--ease-in-out);
+}
+ 
+/* Scoreboard countdown — the ticking energy of game time */
+@keyframes score-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.85; transform: scale(1.02); }
+}
+ 
+.score-pulse {
+  animation: score-pulse 2s ease-in-out infinite;
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   GRADIENT TEXT UTILITIES
+═════════════════════════════════════════════════════════════════════════ */
+ 
+/* The basketball — orange to amber fire */
+.text-gradient-fire {
+  background: linear-gradient(135deg, #b83808 0%, #e05510 45%, #f0780e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+ 
+/* Gold — the trophy, the win, the victory toast */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #b87808 0%, #dba00c 50%, #f0c018 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+ 
+/* Warm parchment — hero display type */
+.text-gradient-parchment {
+  background: linear-gradient(160deg, var(--cream-pure) 0%, var(--cream-mid) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   HOVER GLOW UTILITIES
+═════════════════════════════════════════════════════════════════════════ */
+.hover-glow-brick,
+.hover-glow-orange,
+.hover-glow-amber {
+  transition: box-shadow var(--t-mid) var(--ease-warm);
+}
+ 
+.hover-glow-brick:hover  { box-shadow: var(--glow-brick);  }
+.hover-glow-orange:hover { box-shadow: var(--glow-orange); }
+.hover-glow-amber:hover  { box-shadow: var(--glow-amber);  }
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   MEDIA
+═════════════════════════════════════════════════════════════════════════ */
+img, video {
+  max-width: 100%;
+  display: block;
+}
+ 
+/* Warm bar treatment on images */
+.img-warm {
+  filter: sepia(0.18) saturate(1.20) brightness(0.90) hue-rotate(-6deg);
+  transition: filter var(--t-slow) var(--ease-in-out);
+}
+ 
+.img-warm:hover {
+  filter: sepia(0.08) saturate(1.30) brightness(0.98) hue-rotate(-3deg);
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   FOCUS & ACCESSIBILITY
+═════════════════════════════════════════════════════════════════════════ */
+:focus { outline: none; }
+ 
+:focus-visible {
+  outline: 1.5px solid var(--orange-mid);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+ 
+/* ═════════════════════════════════════════════════════════════════════════
+   TAILWIND BASE LAYER
+═════════════════════════════════════════════════════════════════════════ */
+@layer base {
+  body {
+    @apply antialiased;
+  }
 }
