@@ -71,7 +71,7 @@ npm run dev
  
 ## 🔗 Links
  
-- **Live site:** [thelayupbar.com](https://www.thelayupbar.com)
+- **Live site:** [thelayupbar.com]([the-layup-bar.vercel.app](https://the-layup-bar.vercel.app/))
 - **Instagram:** [@thelayupbar](https://www.instagram.com/thelayupbar/)
  
 ---
