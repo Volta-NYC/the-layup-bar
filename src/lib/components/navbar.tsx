@@ -32,7 +32,6 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
  
-  // lock body scroll when menu is open
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : ""
     return () => { document.body.style.overflow = "" }
@@ -96,7 +95,6 @@ export default function Navbar() {
           white-space: nowrap;
         }
  
-        /* The court-line underline */
         .nav-link::after {
           content: '';
           position: absolute;
@@ -179,7 +177,6 @@ export default function Navbar() {
           box-shadow: 0 0 14px rgba(232, 100, 14, 0.28);
         }
  
-        /* Reserve Now CTA pill */
         .nav-cta {
           font-family: var(--font-heading, 'Barlow Condensed', sans-serif);
           font-size: 0.68rem;
@@ -206,7 +203,7 @@ export default function Navbar() {
           transition: transform 420ms ease;
         }
  
-        .nav-cta:hover { 
+        .nav-cta:hover {
           background: linear-gradient(135deg, #c04812 0%, #e86018 100%);
           box-shadow: 0 4px 28px rgba(220, 90, 18, 0.60);
           transform: translateY(-1px);
@@ -263,7 +260,6 @@ export default function Navbar() {
           opacity: 1; pointer-events: all;
         }
  
-        /* Atmosphere blobs inside mobile menu */
         .nav-mobile-overlay::before {
           content: '';
           position: absolute; top: -80px; left: -80px;
@@ -310,12 +306,6 @@ export default function Navbar() {
  
         .nav-mobile-link:hover::after { width: 100%; }
  
-        .nav-mobile-divider {
-          width: 1px; height: 1px;
-          background: rgba(210, 85, 22, 0.20);
-          margin: 0.3rem 0;
-        }
- 
         .nav-mobile-footer {
           position: absolute; bottom: 2rem; left: 0; right: 0;
           display: flex; align-items: center; justify-content: center;
@@ -345,6 +335,7 @@ export default function Navbar() {
         /* ── Responsive ───────────────────────────────────────────────── */
         @media (max-width: 900px) {
           .nav-left { display: none; }
+          .nav-right .nav-link { display: none; }
           .nav-right .nav-cta { display: none; }
           .nav-right .nav-social-link { display: none; }
           .nav-burger { display: flex; }
@@ -364,7 +355,7 @@ export default function Navbar() {
       <nav className={`nav-root${scrolled ? " scrolled" : ""}`} role="navigation" aria-label="Main navigation">
         <div className="nav-inner">
  
-          {/* Left — desktop nav links */}
+          {/* Left — desktop nav links (first 2) */}
           <div className="nav-left">
             {navLinks.slice(0, 2).map((link) => (
               <Link key={link.href} href={link.href} className="nav-link">
@@ -379,10 +370,10 @@ export default function Navbar() {
             <span className="nav-logo-sub">Brooklyn, NY · Est. 2025</span>
           </Link>
  
-          {/* Right — second half of nav + social + CTA + burger */}
+          {/* Right — last 2 nav links + social + CTA + burger */}
           <div className="nav-right">
             {navLinks.slice(2).map((link) => (
-              <Link key={link.href} href={link.href} className="nav-link" style={{ display: "none" }}>
+              <Link key={link.href} href={link.href} className="nav-link">
                 {link.label}
               </Link>
             ))}
