@@ -39,7 +39,407 @@ const upcomingEvents: Event[] = [
 export default function EventsPage() {
   return (
     <>
-    
+      <style>{`
+        /* ═══════════════════════════════════════════════════
+           ROOT
+        ═══════════════════════════════════════════════════ */
+        .ev-root {
+          font-family: var(--font-body, 'DM Sans', sans-serif);
+          color: var(--cream-warm, #eed8a8);
+          background: var(--bg-base, #0c0f16);
+          overflow-x: hidden;
+          min-height: 100svh;
+        }
+ 
+        /* ═══════════════════════════════════════════════════
+           HERO
+        ═══════════════════════════════════════════════════ */
+        .ev-hero {
+          position: relative;
+          padding: clamp(8rem, 16vw, 13rem) clamp(1.5rem, 5vw, 4rem) clamp(4rem, 8vw, 6rem);
+          overflow: hidden;
+        }
+ 
+        .ev-hero::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(
+            ellipse 80% 60% at 50% 100%,
+            rgba(185,55,10,0.22) 0%, transparent 65%
+          );
+          pointer-events: none;
+        }
+ 
+        .ev-hero::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          opacity: 0.025;
+          background-image: repeating-linear-gradient(
+            -45deg, #fff, #fff 1px, transparent 1px, transparent 12px
+          );
+          pointer-events: none;
+        }
+ 
+        .ev-hero-inner {
+          position: relative;
+          z-index: 1;
+          max-width: 1400px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+ 
+        .ev-eyebrow {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: var(--orange-full, #e8640e);
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+ 
+        .ev-eyebrow::before {
+          content: '';
+          display: block;
+          width: 2.5rem;
+          height: 1px;
+          background: currentColor;
+          flex-shrink: 0;
+        }
+ 
+        .ev-hero-title {
+          font-family: var(--font-display, 'Bebas Neue', sans-serif);
+          font-size: clamp(5rem, 16vw, 12rem);
+          line-height: 0.88;
+          letter-spacing: 0.01em;
+          color: #fff;
+          margin: 0;
+        }
+ 
+        .ev-hero-sub {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: clamp(1rem, 1.8vw, 1.15rem);
+          letter-spacing: 0.08em;
+          color: rgba(238,216,168,0.5);
+          margin-top: 0.25rem;
+        }
+ 
+        /* ═══════════════════════════════════════════════════
+           TICKER
+        ═══════════════════════════════════════════════════ */
+        .ev-ticker-wrap {
+          background: var(--orange-full, #e8640e);
+          overflow: hidden;
+          white-space: nowrap;
+          padding: 0.55rem 0;
+        }
+ 
+        .ev-ticker-track {
+          display: inline-block;
+          animation: ev-ticker 30s linear infinite;
+        }
+ 
+        .ev-ticker-track span {
+          font-family: var(--font-display, 'Bebas Neue', sans-serif);
+          font-size: clamp(0.9rem, 1.4vw, 1rem);
+          letter-spacing: 0.15em;
+          color: #0c0f16;
+          padding: 0 2.5rem;
+        }
+ 
+        .ev-ticker-track span.dot {
+          padding: 0;
+          color: rgba(12,15,22,0.35);
+        }
+ 
+        @keyframes ev-ticker {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+ 
+        /* ═══════════════════════════════════════════════════
+           EVENTS LIST
+        ═══════════════════════════════════════════════════ */
+        .ev-body {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 5vw, 4rem);
+        }
+ 
+        .ev-section-label {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.68rem;
+          font-weight: 700;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: rgba(238,216,168,0.35);
+          margin-bottom: clamp(2rem, 4vw, 3rem);
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+ 
+        .ev-section-label::after {
+          content: '';
+          flex: 1;
+          height: 1px;
+          background: rgba(238,216,168,0.08);
+        }
+ 
+        /* ─── Single event card ─── */
+        .ev-card {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: clamp(1.5rem, 4vw, 3.5rem);
+          padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+          border-bottom: 1px solid rgba(238,216,168,0.07);
+          align-items: start;
+        }
+ 
+        .ev-card:first-child {
+          border-top: 1px solid rgba(238,216,168,0.07);
+        }
+ 
+        @media (max-width: 640px) {
+          .ev-card {
+            grid-template-columns: 1fr;
+          }
+        }
+ 
+        /* Date tag */
+        .ev-date-tag {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 72px;
+          flex-shrink: 0;
+          padding: 0.75rem 0.5rem;
+          border: 1px solid rgba(232,100,14,0.25);
+          background: rgba(232,100,14,0.04);
+          gap: 0.1rem;
+        }
+ 
+        .ev-date-month {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: var(--orange-full, #e8640e);
+          line-height: 1;
+        }
+ 
+        .ev-date-day {
+          font-family: var(--font-display, 'Bebas Neue', sans-serif);
+          font-size: 2.4rem;
+          line-height: 1;
+          letter-spacing: 0.02em;
+          color: #fff;
+        }
+ 
+        /* Card content */
+        .ev-card-content {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 1.5rem;
+          align-items: start;
+        }
+ 
+        @media (max-width: 820px) {
+          .ev-card-content {
+            grid-template-columns: 1fr;
+          }
+        }
+ 
+        .ev-card-text {
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem;
+        }
+ 
+        .ev-card-title {
+          font-family: var(--font-display, 'Bebas Neue', sans-serif);
+          font-size: clamp(2rem, 4vw, 3rem);
+          line-height: 0.95;
+          letter-spacing: 0.02em;
+          color: #fff;
+          margin: 0;
+        }
+ 
+        .ev-card-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.4rem 1.5rem;
+        }
+ 
+        .ev-meta-item {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.8rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: rgba(238,216,168,0.45);
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+ 
+        .ev-meta-item svg {
+          opacity: 0.5;
+          flex-shrink: 0;
+        }
+ 
+        .ev-card-desc {
+          font-size: clamp(0.88rem, 1.2vw, 0.98rem);
+          line-height: 1.75;
+          color: rgba(238,216,168,0.55);
+          max-width: 60ch;
+          margin-top: 0.25rem;
+        }
+ 
+        /* Card image */
+        .ev-card-img {
+          width: 200px;
+          aspect-ratio: 3/4;
+          overflow: hidden;
+          border-radius: 2px;
+          flex-shrink: 0;
+          position: relative;
+        }
+ 
+        .ev-card-img img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 30%;
+          display: block;
+          transition: transform 0.6s ease;
+        }
+ 
+        .ev-card:hover .ev-card-img img {
+          transform: scale(1.04);
+        }
+ 
+        @media (max-width: 820px) {
+          .ev-card-img { width: 100%; aspect-ratio: 16/9; }
+        }
+ 
+        /* ═══════════════════════════════════════════════════
+           EMPTY STATE
+        ═══════════════════════════════════════════════════ */
+        .ev-empty {
+          padding: clamp(3rem, 6vw, 5rem) 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+ 
+        .ev-empty-title {
+          font-family: var(--font-display, 'Bebas Neue', sans-serif);
+          font-size: clamp(1.8rem, 3vw, 2.5rem);
+          letter-spacing: 0.02em;
+          color: rgba(255,255,255,0.25);
+          margin: 0;
+        }
+ 
+        .ev-empty-sub {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.85rem;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: rgba(238,216,168,0.25);
+        }
+ 
+        /* ═══════════════════════════════════════════════════
+           INSTAGRAM CTA
+        ═══════════════════════════════════════════════════ */
+        .ev-cta {
+          border-top: 1px solid rgba(232,100,14,0.12);
+          background: linear-gradient(
+            180deg,
+            rgba(232,100,14,0.04) 0%,
+            rgba(12,15,22,0) 100%
+          );
+          padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem);
+          text-align: center;
+        }
+ 
+        .ev-cta-inner {
+          max-width: 540px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 1.25rem;
+        }
+ 
+        .ev-cta-label {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.28em;
+          text-transform: uppercase;
+          color: var(--orange-full, #e8640e);
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          justify-content: center;
+        }
+ 
+        .ev-cta-label::before,
+        .ev-cta-label::after {
+          content: '';
+          display: block;
+          width: 1.75rem;
+          height: 1px;
+          background: currentColor;
+        }
+ 
+        .ev-cta-title {
+          font-family: var(--font-display, 'Bebas Neue', sans-serif);
+          font-size: clamp(2.4rem, 6vw, 4rem);
+          line-height: 0.9;
+          letter-spacing: 0.02em;
+          color: #fff;
+          margin: 0;
+        }
+ 
+        .ev-cta-title span { color: var(--orange-full, #e8640e); }
+ 
+        .ev-cta-sub {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+          letter-spacing: 0.06em;
+          color: rgba(238,216,168,0.5);
+        }
+ 
+        .ev-btn {
+          font-family: var(--font-nav, 'Barlow Condensed', sans-serif);
+          font-size: 0.78rem;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: #0c0f16;
+          background: var(--orange-full, #e8640e);
+          border: 1.5px solid var(--orange-full, #e8640e);
+          padding: 0.8rem 2rem;
+          text-decoration: none;
+          transition: background 0.2s, color 0.2s;
+          display: inline-block;
+          margin-top: 0.25rem;
+        }
+ 
+        .ev-btn:hover {
+          background: transparent;
+          color: var(--orange-full, #e8640e);
+        }
       `}</style>
  
       <div className="ev-root">
