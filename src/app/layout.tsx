@@ -3,8 +3,13 @@ import Navbar from "@/lib/components/navbar"
 import Footer from "@/lib/components/footer"
 
 export const metadata = {
-  title: "Business Name",
-  description: "Short description of the business."
+  title: "The Layup Bar",
+  description: "The best Layup Sports Bar in Brooklyn.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 }
 
 export default function RootLayout({
