@@ -311,7 +311,7 @@ export default function Footer() {
  
         .footer-credit {
           font-size: 11px;
-          color: var(--text-ghost, rgba(120,88,45,0.40));
+          color: #F6B78D;
           text-decoration: none; letter-spacing: 0.08em;
           display: flex; align-items: center; gap: 0.40rem;
           transition: color 180ms ease;
@@ -326,7 +326,7 @@ export default function Footer() {
           opacity: 0.55;
         }
  
-        .footer-credit:hover { color: var(--text-orange, #e8680e); }
+        .footer-credit:hover { color: #F6B78D; }
         .footer-credit:hover::before { opacity: 1; }
  
         /* Barclays callout — for fun, optional */
@@ -418,8 +418,8 @@ export default function Footer() {
             © {new Date().getFullYear()} The LayUp Sports Bar. All rights reserved.
           </span>
           <span className="footer-barclays-note">1 block from Barclays Center</span>
-          <a href="https://nyc.voltanpo.org" target="_blank" rel="noreferrer" className="footer-credit">
-            Made by @VoltaNYC
+          <a href="https://www.novusnyc.org/" target="_blank" rel="noreferrer" className="footer-credit">
+            Made by Novus
           </a>
         </div>
       </footer>
